@@ -32,7 +32,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
 
 
-//changement
+
 @Composable
 fun FilmScreen(viewModel: MainViewModel = viewModel(), searchQuery: String) {
     // Collecter l'état de 'movies' du ViewModel
