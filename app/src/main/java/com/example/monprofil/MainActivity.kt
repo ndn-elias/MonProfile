@@ -1,5 +1,7 @@
 package com.example.monprofil
 
+import MovieDetailScreen
+import SerieDetailScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -97,45 +99,45 @@ class MainActivity : ComponentActivity() {
 
                     bottomBar = {
                         if (currentDestination?.hasRoute<DestinationProfile>() == false) {
-                        NavigationBar {
+                            NavigationBar {
 
-                            //1er item navbar avec un label
-                            NavigationBarItem(
-                                icon = {
-                                    Icon(
-                                        Icons.Filled.Search,
-                                        contentDescription = "Catalogue des films"
-                                    )
-                                },
-                                label = { Text("Films") }, // Label sous l'icône
-                                selected = currentDestination?.hasRoute<DestinationFilm>() == true,
-                                onClick = { navController.navigate(DestinationFilm()) })
+                                //1er item navbar avec un label
+                                NavigationBarItem(
+                                    icon = {
+                                        Icon(
+                                            Icons.Filled.Search,
+                                            contentDescription = "Catalogue des films"
+                                        )
+                                    },
+                                    label = { Text("Films") }, // Label sous l'icône
+                                    selected = currentDestination?.hasRoute<DestinationFilm>() == true,
+                                    onClick = { navController.navigate(DestinationFilm()) })
 
-                            //2e item navbar avec un label
-                            NavigationBarItem(
-                                icon = {
-                                    Icon(
-                                        imageVector = Icons.AutoMirrored.Filled.List,
-                                        contentDescription = "Catalogue des séries"
-                                    )
-                                },
-                                label = { Text("Séries") }, // Label sous l'icône
-                                selected = currentDestination?.hasRoute<DestinationSerie>() == true,
-                                onClick = { navController.navigate(DestinationSerie()) })
+                                //2e item navbar avec un label
+                                NavigationBarItem(
+                                    icon = {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.List,
+                                            contentDescription = "Catalogue des séries"
+                                        )
+                                    },
+                                    label = { Text("Séries") }, // Label sous l'icône
+                                    selected = currentDestination?.hasRoute<DestinationSerie>() == true,
+                                    onClick = { navController.navigate(DestinationSerie()) })
 
-                            //3e item navbar avec un label
-                            NavigationBarItem(
-                                icon = {
-                                    Icon(
-                                        imageVector = Icons.Filled.Star,
-                                        contentDescription = "Catalogue des acteurs"
-                                    )
-                                },
-                                label = { Text("Acteurs") }, // Label sous l'icône
-                                selected = currentDestination?.hasRoute<DestinationActeur>() == true,
-                                onClick = { navController.navigate(DestinationActeur()) })
+                                //3e item navbar avec un label
+                                NavigationBarItem(
+                                    icon = {
+                                        Icon(
+                                            imageVector = Icons.Filled.Star,
+                                            contentDescription = "Catalogue des acteurs"
+                                        )
+                                    },
+                                    label = { Text("Acteurs") }, // Label sous l'icône
+                                    selected = currentDestination?.hasRoute<DestinationActeur>() == true,
+                                    onClick = { navController.navigate(DestinationActeur()) })
 
-                        }
+                            }
                         }
                     }
                 ) { innerPadding ->
@@ -147,11 +149,21 @@ class MainActivity : ComponentActivity() {
                             FilmScreen(viewModel = viewModel(), searchQuery = searchQuery.text)
                         }
                         composable<DestinationSerie> {
-                            SerieScreen(viewModel = viewModel(), searchQuery = searchQuery.text)
+                            SerieScreen(viewModel = viewModel(), searchQuery = searchQuery.text, navController)
                         }
                         composable<DestinationActeur> {
                             ActeurScreen(viewModel = viewModel(), searchQuery = searchQuery.text)
                         }
+                        composable("main") { MainScreen(navController) }
+                        composable("movie/{movieId}") { backStackEntry ->
+                            val movieId = backStackEntry.arguments?.getString("movieId")?.toIntOrNull()
+                            movieId?.let { MovieDetailScreen(movieId = it) }
+                        }
+                        composable("serie/{serieId}") { backStackEntry ->
+                            val serieId = backStackEntry.arguments?.getString("serieId")?.toIntOrNull()
+                            serieId?.let { SerieDetailScreen(serieId = it) }
+                        }
+
                     }
                 }
             }

@@ -28,6 +28,10 @@ class MainViewModel : ViewModel() {
 
     val api_key = "be1ca8af0da3936dcdb2aeaad464d374"
 
+    val movieDetails = MutableStateFlow<AfficheDeFilm?>(null)
+    val serieDetails = MutableStateFlow<Serie?>(null)
+
+
     // Fonction pour récupérer les films populaires
     fun getMovies() {
         viewModelScope.launch {
@@ -123,4 +127,31 @@ class MainViewModel : ViewModel() {
             }
         }
     }
+    // Récupérer les détails du film
+    fun fetchMovieDetails(movieId: Int) {
+        viewModelScope.launch {
+            try {
+                val details = api.getMovieDetails(movieId, api_key)
+                movieDetails.value = details
+            } catch (e: Exception) {
+                // Gérer l'erreur
+                movieDetails.value = null
+            }
+        }
+    }
+
+    // Récupérer les détails de la série
+    fun fetchSerieDetails(serieId: Int) {
+        viewModelScope.launch {
+            try {
+                val details = api.getSerieDetails(serieId, api_key)
+                serieDetails.value = details
+            } catch (e: Exception) {
+                // Gérer l'erreur
+                serieDetails.value = null
+            }
+        }
+    }
 }
+
+

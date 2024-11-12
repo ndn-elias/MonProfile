@@ -1,9 +1,11 @@
 package com.example.monprofil
 
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface Api {
+
     // Films
     @GET("trending/movie/week")
     suspend fun lastmovies(@Query("api_key") api_key: String): TMDBListeDesFilms
@@ -33,4 +35,18 @@ interface Api {
         @Query("api_key") apiKey: String,
         @Query("query") searchQuery: String
     ): TMDBListeDesActeurs
+
+    // Détails du film
+    @GET("movie/{movie_id}")
+    suspend fun getMovieDetails(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String
+    ): AfficheDeFilm
+
+    // Détails de la série
+    @GET("tv/{tv_id}")
+    suspend fun getSerieDetails(
+        @Path("tv_id") serieId: Int,
+        @Query("api_key") apiKey: String
+    ): Serie
 }
