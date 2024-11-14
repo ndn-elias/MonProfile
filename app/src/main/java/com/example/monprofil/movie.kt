@@ -1,43 +1,39 @@
-import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import com.example.monprofil.MainViewModel
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.monprofil.MainViewModel
 
-
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovieDetailScreen(movieId: Int, viewModel: MainViewModel = viewModel()) {
-    // Lancer l'appel pour récupérer les détails du film dès que le composant est initialisé
+    // Appel pour récupérer les détails de la série
     LaunchedEffect(movieId) {
         viewModel.fetchMovieDetails(movieId)
     }
 
-    // Observer l'état de movieDetails
+    // Observer l'état des détails de la série
     val movieDetails by viewModel.movieDetails.collectAsState()
 
-    // Scaffold pour l'organisation de l'interface utilisateur
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Détails du Film") }
             )
         }
-    ) {
+    ) { paddingValues ->
         // Affichage des détails ou message de chargement
         movieDetails?.let { movie ->
-            Column {
-                Text(text = "Titre : ${movie.title}")
-                Text(text = "Description : ${movie.overview}")
+            Column(modifier = Modifier.padding(paddingValues).padding(16.dp)) {
+                Text(text = "Titre : ${movie.title}", style = MaterialTheme.typography.titleLarge)
+                Text(text = "Synopsis : ${movie.overview}", style = MaterialTheme.typography.bodyMedium)
                 // Ajoutez d'autres éléments d'interface pour afficher les informations souhaitées
             }
         } ?: run {
-            Text(text = "Chargement ou film introuvable")
+            Text(text = "Chargement ou film introuvable", modifier = Modifier.padding(16.dp))
         }
     }
 }
+

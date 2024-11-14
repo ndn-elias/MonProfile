@@ -1,6 +1,7 @@
 package com.example.monprofil
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -29,6 +30,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 
 
@@ -83,13 +85,14 @@ fun FilmScreen(viewModel: MainViewModel = viewModel(), searchQuery: String) {
 
 
 @Composable
-fun FilmCard(film: AfficheDeFilm) {
+fun FilmCard(film: AfficheDeFilm, navController: NavController) {
     val posterUrl = "https://image.tmdb.org/t/p/w500${film.poster_path}" // URL pour l'affiche du film
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(4.dp), // Augmentation du padding autour de chaque carte
+            .padding(4.dp) // Augmentation du padding autour de chaque carte
+            .clickable { navController.navigate("serie/${film.id}") }, // Navigation avec l'ID de la série
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
         elevation = CardDefaults.elevatedCardElevation(8.dp) // Plus d'élévation pour donner un effet "shadow"
