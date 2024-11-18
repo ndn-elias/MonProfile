@@ -154,7 +154,6 @@ class MainActivity : ComponentActivity() {
                         composable<DestinationActeur> {
                             ActeurScreen(viewModel = viewModel(), searchQuery = searchQuery.text)
                         }
-                        composable("main") { MainScreen(navController) }
                         composable("movie/{movieId}") { backStackEntry ->
                             val movieId = backStackEntry.arguments?.getString("movieId")?.toIntOrNull()
                             movieId?.let { MovieDetailScreen(movieId = it) }
