@@ -2,6 +2,7 @@
 package com.example.monprofil
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -19,10 +20,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 
 @Composable
-fun ActeurScreen(viewModel: MainViewModel = viewModel(), searchQuery: String) {
+fun ActeurScreen(viewModel: MainViewModel = viewModel(), searchQuery: String, navController: NavController) {
     val acteurs by viewModel.acteurs.collectAsState()
 
     LaunchedEffect(searchQuery) {
@@ -39,19 +41,20 @@ fun ActeurScreen(viewModel: MainViewModel = viewModel(), searchQuery: String) {
         contentPadding = PaddingValues(16.dp)
     ) {
         items(acteurs) { acteur ->
-            ActeurCard(acteur)
+            ActeurCard(acteur, navController)
         }
     }
 }
 
 @Composable
-fun ActeurCard(acteur: Acteur) {
+fun ActeurCard(acteur: Acteur, navController: NavController) {
     val posterUrl = "https://image.tmdb.org/t/p/w500${acteur.profile_path}"
 
     Card(
-        modifier = Modifier.fillMaxWidth().padding(4.dp),
-        shape = RoundedCornerShape(8.dp),
+        modifier = Modifier.fillMaxWidth().padding(4.dp).clickable { navController.navigate("acteur/${acteur.id}") }, // Navigation avec l'ID de l'acteur
+            shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+
         elevation = CardDefaults.elevatedCardElevation(8.dp)
     ) {
         Column(

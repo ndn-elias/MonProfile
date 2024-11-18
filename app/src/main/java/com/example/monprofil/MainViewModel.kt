@@ -30,6 +30,7 @@ class MainViewModel : ViewModel() {
 
     val movieDetails = MutableStateFlow<AfficheDeFilm?>(null)
     val serieDetails = MutableStateFlow<Serie?>(null)
+    val acteurDetails = MutableStateFlow<Acteur?>(null)
 
 
     // Fonction pour récupérer les films populaires
@@ -149,6 +150,19 @@ class MainViewModel : ViewModel() {
             } catch (e: Exception) {
                 // Gérer l'erreur
                 serieDetails.value = null
+            }
+        }
+    }
+
+    // Récupérer les détails des acteurs
+    fun fetchActeurDetails(acteursId: Int) {
+        viewModelScope.launch {
+            try {
+                val details = api.getActeurDetails(acteursId, api_key)
+                acteurDetails.value = details
+            } catch (e: Exception) {
+                // Gérer l'erreur
+                acteurDetails.value = null
             }
         }
     }

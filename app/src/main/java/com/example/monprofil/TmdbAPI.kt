@@ -49,4 +49,10 @@ interface Api {
         @Path("tv_id") serieId: Int,
         @Query("api_key") apiKey: String
     ): Serie
+
+    @GET("person/{person_id}")
+    suspend fun getActeurDetails(
+        @Path("person_id") acteurId: Int,
+        @Query("api_key") apiKey: String
+    ): Acteur
 }

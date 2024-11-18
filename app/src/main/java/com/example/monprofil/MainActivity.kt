@@ -152,7 +152,7 @@ class MainActivity : ComponentActivity() {
                             SerieScreen(viewModel = viewModel(), searchQuery = searchQuery.text, navController)
                         }
                         composable<DestinationActeur> {
-                            ActeurScreen(viewModel = viewModel(), searchQuery = searchQuery.text)
+                            ActeurScreen(viewModel = viewModel(), searchQuery = searchQuery.text, navController)
                         }
                         composable("movie/{movieId}") { backStackEntry ->
                             val movieId = backStackEntry.arguments?.getString("movieId")?.toIntOrNull()
@@ -161,6 +161,10 @@ class MainActivity : ComponentActivity() {
                         composable("serie/{serieId}") { backStackEntry ->
                             val serieId = backStackEntry.arguments?.getString("serieId")?.toIntOrNull()
                             serieId?.let { SerieDetailScreen(serieId = it) }
+                        }
+                        composable("acteur/{acteurId}") { backStackEntry ->
+                            val acteurId = backStackEntry.arguments?.getString("acteurId")?.toIntOrNull()
+                            acteurId?.let { ActeurDetailScreen(acteurId = it) }
                         }
 
                     }
