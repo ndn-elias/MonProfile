@@ -36,9 +36,10 @@ import coil.compose.rememberImagePainter
 
 
 @Composable
-fun FilmScreen(viewModel: MainViewModel = viewModel(), searchQuery: String) {
+fun FilmScreen(viewModel: MainViewModel = viewModel(), searchQuery: String, navController: NavController) {
     // Collecter l'état de 'movies' du ViewModel
     val movies by viewModel.movies.collectAsState()
+
 
     // Appeler searchMovies si un mot-clé est saisi
     LaunchedEffect(searchQuery) {
@@ -66,7 +67,7 @@ fun FilmScreen(viewModel: MainViewModel = viewModel(), searchQuery: String) {
         if (movies.isNotEmpty()) {
             // Afficher les films si la liste n'est pas vide
             items(movies) { film ->
-                FilmCard(film)
+                FilmCard(film, navController)
             }
         } else {
             // Afficher un message si la liste est vide
@@ -92,7 +93,7 @@ fun FilmCard(film: AfficheDeFilm, navController: NavController) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(4.dp) // Augmentation du padding autour de chaque carte
-            .clickable { navController.navigate("serie/${film.id}") }, // Navigation avec l'ID de la série
+            .clickable { navController.navigate("movie/${film.id}") },// Navigation avec l'ID du film
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
         elevation = CardDefaults.elevatedCardElevation(8.dp) // Plus d'élévation pour donner un effet "shadow"

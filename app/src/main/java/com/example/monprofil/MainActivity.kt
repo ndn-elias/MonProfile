@@ -146,7 +146,7 @@ class MainActivity : ComponentActivity() {
                             ProfileScreen(navController, innerPadding, windowSizeClass)
                         }
                         composable<DestinationFilm> {
-                            FilmScreen(viewModel = viewModel(), searchQuery = searchQuery.text)
+                            FilmScreen(viewModel = viewModel(), searchQuery = searchQuery.text, navController)
                         }
                         composable<DestinationSerie> {
                             SerieScreen(viewModel = viewModel(), searchQuery = searchQuery.text, navController)
