@@ -95,7 +95,6 @@ fun SerieDetailScreen(serieId: Int, viewModel: MainViewModel = viewModel()) {
                 }
 
                 // Affichage des acteurs
-                // Affichage des acteurs
                 item {
                     if (credits?.cast?.isNotEmpty() == true) {
                         Text(
