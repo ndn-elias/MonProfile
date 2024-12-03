@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -34,120 +35,107 @@ import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 
 
-
 @Composable
 fun FilmScreen(viewModel: MainViewModel = viewModel(), searchQuery: String, navController: NavController) {
-    // Collecter l'état de 'movies' du ViewModel
     val movies by viewModel.movies.collectAsState()
 
-
-    // Appeler searchMovies si un mot-clé est saisi
     LaunchedEffect(searchQuery) {
         if (searchQuery.isNotBlank()) {
-            viewModel.searchMovies(searchQuery) // Effectuer la recherche par mot-clé
+            viewModel.searchMovies(searchQuery)
         } else {
-            viewModel.getMovies() // Si le champ de recherche est vide, récupérer tous les films
+            viewModel.getMovies()
         }
     }
 
-    // Modifier pour éviter que la BottomBar coupe les films
+    // Détecter l'orientation
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
+
     val screenPadding = 80.dp
 
     LazyVerticalGrid(
-        columns = GridCells.Fixed(2), // 2 cartes par ligne
+        columns = if (isLandscape) GridCells.Fixed(4) else GridCells.Fixed(2), // 4 colonnes en paysage, 2 en portrait
         modifier = Modifier
             .fillMaxSize()
-            .padding(bottom = screenPadding) // Ajoute un padding en bas pour laisser de l'espace à la BottomBar
-            .padding(16.dp), // Padding autour de la grille
-        contentPadding = PaddingValues(16.dp), // Ajoute de l'espace autour du grid
-        verticalArrangement = Arrangement.spacedBy(8.dp), // Espacement vertical entre les cartes
-        horizontalArrangement = Arrangement.spacedBy(8.dp) // Espacement horizontal entre les cartes
+            .padding(bottom = screenPadding)
+            .padding(top = screenPadding)
+            .padding(16.dp),
+        contentPadding = PaddingValues(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // Vérifier si la liste des films est vide
         if (movies.isNotEmpty()) {
-            // Afficher les films si la liste n'est pas vide
             items(movies) { film ->
-                FilmCard(film, navController)
+                FilmCard(film, navController, isLandscape)
             }
         } else {
-            // Afficher un message si la liste est vide
             item {
                 Text(
                     text = "Aucun film trouvé.",
                     color = Color.Gray,
-                    modifier = Modifier
-                        .padding(16.dp)
+                    modifier = Modifier.padding(16.dp)
                 )
             }
         }
     }
 }
-
-
-
 @Composable
-fun FilmCard(film: AfficheDeFilm, navController: NavController) {
-    val posterUrl = "https://image.tmdb.org/t/p/w500${film.poster_path}" // URL pour l'affiche du film
+fun FilmCard(film: AfficheDeFilm, navController: NavController, isLandscape: Boolean) {
+    val posterUrl = "https://image.tmdb.org/t/p/w500${film.poster_path}"
 
     Card(
         modifier = Modifier
+            .padding(4.dp)
             .fillMaxWidth()
-            .padding(4.dp) // Augmentation du padding autour de chaque carte
-            .clickable { navController.navigate("movie/${film.id}") },// Navigation avec l'ID du film
+            .clickable { navController.navigate("movie/${film.id}") },
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
-        elevation = CardDefaults.elevatedCardElevation(8.dp) // Plus d'élévation pour donner un effet "shadow"
+        elevation = CardDefaults.elevatedCardElevation(4.dp)
     ) {
         Column(
             modifier = Modifier
                 .padding(4.dp)
                 .fillMaxWidth()
-                .heightIn(min = 350.dp) // Fixe une hauteur minimum pour éviter la coupe du contenu
+                .heightIn(min = if (isLandscape) 250.dp else 350.dp) // Hauteur réduite en paysage
         ) {
-            // Affichage de l'image du film (affiche)
             Image(
                 painter = rememberImagePainter(posterUrl),
                 contentDescription = "Affiche de ${film.title}",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp) // Hauteur fixe pour l'image
-                    .padding(bottom = 8.dp),
+                    .height(if (isLandscape) 120.dp else 200.dp) // Hauteur réduite en paysage
+                    .padding(bottom = 4.dp),
                 alignment = Alignment.Center,
-                contentScale = ContentScale.Crop // Adapter l'image à la taille sans déformer
+                contentScale = ContentScale.Crop
             )
 
-            // Titre du film centré, limité à 25 caractères avec "..."
             Text(
                 text = if (film.title.length > 25) film.title.take(25) + "..." else film.title,
-                style = MaterialTheme.typography.titleLarge,
-                maxLines = 1, // Limite à 2 lignes
-                overflow = TextOverflow.Ellipsis, // Ajoute "..." si le texte dépasse
+                style = MaterialTheme.typography.titleSmall, // Texte plus petit
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
-                    .padding(bottom = 8.dp)
-                    .align(Alignment.CenterHorizontally) // Centre horizontalement
+                    .padding(bottom = 4.dp)
+                    .align(Alignment.CenterHorizontally)
             )
 
-            // Ajouter une brève description du film avec gestion du texte
             Text(
                 text = film.overview,
-                style = MaterialTheme.typography.bodyMedium,
-                maxLines = 4, // Limite à 4 lignes
-                overflow = TextOverflow.Ellipsis, // Ajoute "..." si le texte dépasse
+                style = MaterialTheme.typography.bodySmall,
+                maxLines = if (isLandscape) 2 else 4, // Moins de lignes en paysage
+                overflow = TextOverflow.Ellipsis,
                 color = Color.Gray,
-                modifier = Modifier
-                    .padding(bottom = 8.dp) // Supprimer le `weight(1f)`
+                modifier = Modifier.padding(bottom = 4.dp)
             )
 
-            // Utilisation de Spacer pour pousser la note en bas
             Spacer(modifier = Modifier.weight(1f))
 
-            // Note du film, également centrée et positionnée en bas
             Text(
                 text = "Note: ${film.vote_average}",
                 color = Color.Red,
                 modifier = Modifier
-                    .padding(top = 8.dp)
-                    .align(Alignment.CenterHorizontally) // Centre horizontalement
+                    .padding(top = 4.dp)
+                    .align(Alignment.CenterHorizontally)
             )
         }
     }

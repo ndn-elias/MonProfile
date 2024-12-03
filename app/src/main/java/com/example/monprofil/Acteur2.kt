@@ -1,14 +1,19 @@
 package com.example.monprofil
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
@@ -27,33 +32,59 @@ fun ActeurDetailScreen(acteurId: Int, viewModel: MainViewModel = viewModel()) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Détails de l'Acteur") }
+                title = { Text("Détails de l'Acteur") },
+                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
             )
         }
     ) { paddingValues ->
-        // Affichage des détails ou message de chargement
         acteurDetails?.let { acteur ->
-            Column(modifier = Modifier.padding(paddingValues).padding(16.dp)) {
-                // Affichage de l'image de l'acteur
-                val posterUrl = "https://image.tmdb.org/t/p/w500${acteur.profile_path}"
-                Image(
-                    painter = rememberImagePainter(posterUrl),
-                    contentDescription = "Image de ${acteur.name}",
-                    modifier = Modifier.fillMaxWidth().height(200.dp).padding(bottom = 8.dp),
-                    contentScale = ContentScale.Crop
-                )
+            val screenPadding = 80.dp
+            val topscreenPadding = 5.dp
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(bottom = screenPadding)
+                    .padding(top = topscreenPadding)
+                    .padding(16.dp)
+            ) {
+                // Image de l'acteur
+                item {
+                    val profileUrl = "https://image.tmdb.org/t/p/w500${acteur.profile_path}"
+                    Image(
+                        painter = rememberImagePainter(profileUrl),
+                        contentDescription = "Image de ${acteur.name}",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(300.dp)
+                            .padding(bottom = 16.dp),
+                        contentScale = ContentScale.Crop
+                    )
+                }
 
-                // Nom de l'acteur
-                Text(
-                    text = "Nom : ${acteur.name}",
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
+                // Nom
+                item {
+                    Text(
+                        text = acteur.name,
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.padding(bottom = 8.dp),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+
+
             }
         } ?: run {
-            // Message de chargement ou erreur
-            Text(text = "Chargement ou acteur introuvable", modifier = Modifier.padding(16.dp))
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
         }
     }
 }
-
