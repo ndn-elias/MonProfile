@@ -34,13 +34,14 @@ interface Api {
     suspend fun searchActeurs(
         @Query("api_key") apiKey: String,
         @Query("query") searchQuery: String
-    ): TMDBListeDesActeurs
+            ): TMDBListeDesActeurs
 
     // Détails du film
     @GET("movie/{movie_id}")
     suspend fun getMovieDetails(
         @Path("movie_id") movieId: Int,
-        @Query("api_key") apiKey: String
+        @Query("api_key") apiKey: String,
+        @Query("append_to_response") appendToResponse: String = "credits"
     ): AfficheDeFilm
 
     // Détails de la série

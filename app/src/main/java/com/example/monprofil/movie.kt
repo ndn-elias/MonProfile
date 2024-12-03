@@ -37,6 +37,8 @@ fun MovieDetailScreen(movieId: Int, viewModel: MainViewModel = viewModel()) {
         // Affichage des détails ou message de chargement
         if (movieDetails != null) {
             val movie = movieDetails!!
+            val credits = movie.credits // Récupère les crédits
+
             val screenPadding = 80.dp
             val topscreenPadding = 5.dp
 
@@ -106,6 +108,54 @@ fun MovieDetailScreen(movieId: Int, viewModel: MainViewModel = viewModel()) {
                     )
                 }
 
+                // Affichage des acteurs
+                item {
+                    if (credits?.cast?.isNotEmpty() == true) {
+                        Text(
+                            text = "Acteurs :",
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        credits.cast.forEach { actor ->
+                            Text(
+                                text = actor.name,
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(bottom = 4.dp)
+                            )
+                        }
+                    } else {
+                        Text(
+                            text = "Aucun acteur disponible.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        )
+                    }
+                }
+
+                // Affichage de l'équipe (réalisateurs, etc.)
+                item {
+                    if (credits?.crew?.isNotEmpty() == true) {
+                        Text(
+                            text = "Équipe :",
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        credits.crew.forEach { member ->
+                            Text(
+                                text = "${member.name} - ${member.job}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(bottom = 4.dp)
+                            )
+                        }
+                    } else {
+                        Text(
+                            text = "Aucune équipe disponible.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        )
+                    }
+                }
+
             }
         } else {
             // Message de chargement
@@ -120,3 +170,4 @@ fun MovieDetailScreen(movieId: Int, viewModel: MainViewModel = viewModel()) {
         }
     }
 }
+

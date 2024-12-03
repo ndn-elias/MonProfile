@@ -2,6 +2,7 @@ package com.example.monprofil
 
 import kotlinx.serialization.Serializable
 
+@Serializable
 data class TMDBListeDesFilms(
     val page: Int = 1,
     val results: List<AfficheDeFilm> = emptyList(),
@@ -9,6 +10,7 @@ data class TMDBListeDesFilms(
     val total_results: Int = 0
 )
 
+@Serializable
 data class AfficheDeFilm(
     val adult: Boolean = false,
     val backdrop_path: String = "",
@@ -24,10 +26,34 @@ data class AfficheDeFilm(
     val title: String = "",
     val video: Boolean = false,
     val vote_average: Double = 0.0,
-    val vote_count: Int = 0
+    val vote_count: Int = 0,
+    val credits: Credits? = null // Ajout des crédits
 )
 
-@kotlinx.serialization.Serializable
+@Serializable
+data class Credits(
+    val cast: List<CastMember> = emptyList(), // Liste des acteurs
+    val crew: List<CrewMember> = emptyList()  // Liste des membres de l'équipe
+)
+
+@Serializable
+data class CastMember(
+    val id: Int,
+    val name: String,
+    val character: String, // Nom du personnage joué par l'acteur
+    val profile_path: String? // URL de l'image du profil de l'acteur
+)
+
+@Serializable
+data class CrewMember(
+    val id: Int,
+    val name: String,
+    val job: String, // Rôle dans la production du film (ex : réalisateur)
+    val department: String, // Département (ex : direction, production)
+    val profile_path: String? // URL de l'image du profil du membre de l'équipe
+)
+
+@Serializable
 data class TMDBListeDesSeries(
     val results: List<Serie>
 )
