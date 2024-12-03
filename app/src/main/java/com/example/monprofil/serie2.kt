@@ -17,6 +17,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import coil.compose.rememberImagePainter
 import com.example.monprofil.MainViewModel
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SerieDetailScreen(serieId: Int, viewModel: MainViewModel = viewModel()) {
@@ -39,9 +40,13 @@ fun SerieDetailScreen(serieId: Int, viewModel: MainViewModel = viewModel()) {
             )
         }
     ) { paddingValues ->
-        serieDetails?.let { serie ->
+        // Affichage des détails ou message de chargement
+        if (serieDetails != null) {
+            val serie = serieDetails!!
+            val credits = serie.credits // Récupère les crédits
             val screenPadding = 80.dp
             val topscreenPadding = 5.dp
+
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -50,7 +55,7 @@ fun SerieDetailScreen(serieId: Int, viewModel: MainViewModel = viewModel()) {
                     .padding(top = topscreenPadding)
                     .padding(16.dp)
             ) {
-                // Image de la série
+                // Affichage de l'image de la série
                 item {
                     val posterUrl = "https://image.tmdb.org/t/p/w500${serie.poster_path}"
                     Image(
@@ -58,13 +63,13 @@ fun SerieDetailScreen(serieId: Int, viewModel: MainViewModel = viewModel()) {
                         contentDescription = "Affiche de ${serie.name}",
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(300.dp)
+                            .height(300.dp) // Plus grande image pour mieux représenter la série
                             .padding(bottom = 16.dp),
                         contentScale = ContentScale.Crop
                     )
                 }
 
-                // Titre
+                // Titre de la série
                 item {
                     Text(
                         text = serie.name,
@@ -89,11 +94,61 @@ fun SerieDetailScreen(serieId: Int, viewModel: MainViewModel = viewModel()) {
                     )
                 }
 
+                // Affichage des acteurs
+                // Affichage des acteurs
+                item {
+                    if (credits?.cast?.isNotEmpty() == true) {
+                        Text(
+                            text = "Acteurs :",
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        credits.cast.forEach { actor ->
+                            Text(
+                                text = actor.name,
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(bottom = 4.dp)
+                            )
+                        }
+                    } else {
+                        Text(
+                            text = "Aucun acteur disponible.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        )
+                    }
+                }
 
+                // Affichage de l'équipe (réalisateurs, etc.)
+                item {
+                    if (credits?.crew?.isNotEmpty() == true) {
+                        Text(
+                            text = "Équipe :",
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        credits.crew.forEach { member ->
+                            Text(
+                                text = "${member.name} - ${member.job}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(bottom = 4.dp)
+                            )
+                        }
+                    } else {
+                        Text(
+                            text = "Aucune équipe disponible.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        )
+                    }
+                }
             }
-        } ?: run {
+        } else {
+            // Message de chargement
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator()

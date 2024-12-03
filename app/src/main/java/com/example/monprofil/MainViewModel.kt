@@ -151,7 +151,10 @@ class MainViewModel : ViewModel() {
     fun fetchSerieDetails(serieId: Int) {
         viewModelScope.launch {
             try {
-                val details = api.getSerieDetails(serieId, api_key)
+                val details = api.getSerieDetails(
+                    serieId,
+                    api_key,
+                    appendToResponse = "credits")
                 serieDetails.value = details
             } catch (e: Exception) {
                 // Gérer l'erreur

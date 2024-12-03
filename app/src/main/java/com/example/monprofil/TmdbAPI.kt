@@ -48,7 +48,8 @@ interface Api {
     @GET("tv/{tv_id}")
     suspend fun getSerieDetails(
         @Path("tv_id") serieId: Int,
-        @Query("api_key") apiKey: String
+        @Query("api_key") apiKey: String,
+        @Query("append_to_response") appendToResponse: String = "credits"
     ): Serie
 
     @GET("person/{person_id}")

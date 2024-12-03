@@ -63,7 +63,8 @@ data class Serie(
     val id: Int,
     val name: String,
     val overview: String,
-    val poster_path: String? // URL de l'image du poster
+    val poster_path: String?,
+    val credits: Credits? = null
 )
 
 @Serializable
