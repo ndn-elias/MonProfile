@@ -25,7 +25,7 @@ fun MovieDetailScreen(movieId: Int, viewModel: MainViewModel = viewModel()) {
         viewModel.fetchMovieDetails(movieId)
     }
 
-    // Observer l'état des détails du film
+    // Observer l'état
     val movieDetails by viewModel.movieDetails.collectAsState()
 
     Scaffold(
