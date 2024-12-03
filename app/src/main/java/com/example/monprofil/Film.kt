@@ -32,7 +32,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
 import coil.compose.rememberImagePainter
 
 
@@ -53,7 +52,6 @@ fun FilmScreen(viewModel: MainViewModel = viewModel(), searchQuery: String, navC
     val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
 
     val screenPadding = 80.dp
-
 
 
     LazyVerticalGrid(

@@ -180,12 +180,11 @@ class MainViewModel : ViewModel() {
         return moshi.adapter(Playlist::class.java).fromJson(playlistjson)!!
     }
 
-    fun MajEtat() {
+    fun getPlaylist() {
         viewModelScope.launch{
             fetchPlaylist(maplaylist)
         }
     }
-
 
 }
 
