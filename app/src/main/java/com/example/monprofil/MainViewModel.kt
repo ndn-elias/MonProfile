@@ -2,6 +2,8 @@ package com.example.monprofil
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myapplicationtest.playlistjson
+import com.squareup.moshi.Moshi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
@@ -17,20 +19,17 @@ val retrofit = Retrofit.Builder()
 val api = retrofit.create(Api::class.java)
 
 class MainViewModel : ViewModel() {
-    // Propriétés pour les films
     val movies = MutableStateFlow<List<AfficheDeFilm>>(emptyList())
-
-    // Propriétés pour les séries
     val series = MutableStateFlow<List<Serie>>(emptyList())
-
-    // Propriétés pour les acteurs
     val acteurs = MutableStateFlow<List<Acteur>>(emptyList())
-
     val api_key = "be1ca8af0da3936dcdb2aeaad464d374"
-
     val movieDetails = MutableStateFlow<AfficheDeFilm?>(null)
     val serieDetails = MutableStateFlow<Serie?>(null)
     val acteurDetails = MutableStateFlow<Acteur?>(null)
+
+
+
+    val maplaylist = MutableStateFlow<Playlist?>(null)
 
     // Fonction pour récupérer les films populaires
     fun getMovies() {
@@ -175,5 +174,18 @@ class MainViewModel : ViewModel() {
             }
         }
     }
+
+    fun fetchPlaylist(uneplaylist: MutableStateFlow<Playlist?>): Playlist {
+        val moshi = Moshi.Builder().build()
+        return moshi.adapter(Playlist::class.java).fromJson(playlistjson)!!
+    }
+
+    fun MajEtat() {
+        viewModelScope.launch{
+            fetchPlaylist(maplaylist)
+        }
+    }
+
+
 }
 
