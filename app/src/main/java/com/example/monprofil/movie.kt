@@ -1,15 +1,20 @@
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
+import com.example.monprofil.CastMember
+import com.example.monprofil.CrewMember
 import com.example.monprofil.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -108,7 +113,7 @@ fun MovieDetailScreen(movieId: Int, viewModel: MainViewModel = viewModel()) {
                     )
                 }
 
-                // Affichage des acteurs
+                // Affichage des acteurs stylisé
                 item {
                     if (credits?.cast?.isNotEmpty() == true) {
                         Text(
@@ -116,12 +121,13 @@ fun MovieDetailScreen(movieId: Int, viewModel: MainViewModel = viewModel()) {
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
-                        credits.cast.forEach { actor ->
-                            Text(
-                                text = actor.name,
-                                style = MaterialTheme.typography.bodyMedium,
-                                modifier = Modifier.padding(bottom = 4.dp)
-                            )
+                        LazyRow(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        ) {
+                            items(credits.cast) { actor ->
+                                ActorCard(actor = actor)
+                            }
                         }
                     } else {
                         Text(
@@ -132,7 +138,7 @@ fun MovieDetailScreen(movieId: Int, viewModel: MainViewModel = viewModel()) {
                     }
                 }
 
-                // Affichage de l'équipe (réalisateurs, etc.)
+                // Affichage de l'équipe stylisée
                 item {
                     if (credits?.crew?.isNotEmpty() == true) {
                         Text(
@@ -140,12 +146,13 @@ fun MovieDetailScreen(movieId: Int, viewModel: MainViewModel = viewModel()) {
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
-                        credits.crew.forEach { member ->
-                            Text(
-                                text = "${member.name} - ${member.job}",
-                                style = MaterialTheme.typography.bodyMedium,
-                                modifier = Modifier.padding(bottom = 4.dp)
-                            )
+                        LazyRow(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        ) {
+                            items(credits.crew) { member ->
+                                CrewMemberCard(member = member)
+                            }
                         }
                     } else {
                         Text(
@@ -155,7 +162,6 @@ fun MovieDetailScreen(movieId: Int, viewModel: MainViewModel = viewModel()) {
                         )
                     }
                 }
-
             }
         } else {
             // Message de chargement
@@ -171,3 +177,83 @@ fun MovieDetailScreen(movieId: Int, viewModel: MainViewModel = viewModel()) {
     }
 }
 
+// Composable pour afficher chaque acteur de manière stylisée
+@Composable
+fun ActorCard(actor: CastMember) {
+    Card(
+        modifier = Modifier
+            .width(100.dp)
+            .height(150.dp)
+            .padding(4.dp),
+        shape = MaterialTheme.shapes.medium,
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            val imageUrl = "https://image.tmdb.org/t/p/w500${actor.profile_path}"
+            Image(
+                painter = rememberImagePainter(imageUrl),
+                contentDescription = "Profil de ${actor.name}",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp)
+                    .clip(MaterialTheme.shapes.medium)
+                    .padding(8.dp),
+                contentScale = ContentScale.Crop
+            )
+            Text(
+                text = actor.name,
+                style = MaterialTheme.typography.bodySmall,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+        }
+    }
+}
+
+// Composable pour afficher chaque membre de l'équipe de manière stylisée
+@Composable
+fun CrewMemberCard(member: CrewMember) {
+    Card(
+        modifier = Modifier
+            .width(100.dp)
+            .height(150.dp)
+            .padding(4.dp),
+        shape = MaterialTheme.shapes.medium,
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            val imageUrl = "https://image.tmdb.org/t/p/w500${member.profile_path}"
+            Image(
+                painter = rememberImagePainter(imageUrl),
+                contentDescription = "Profil de ${member.name}",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp)
+                    .clip(MaterialTheme.shapes.medium)
+                    .padding(8.dp),
+                contentScale = ContentScale.Crop
+            )
+            Text(
+                text = member.name,
+                style = MaterialTheme.typography.bodySmall,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+            Text(
+                text = member.job,
+                style = MaterialTheme.typography.bodySmall,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+        }
+    }
+}
