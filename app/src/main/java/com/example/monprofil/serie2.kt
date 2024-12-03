@@ -6,12 +6,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
@@ -94,7 +97,7 @@ fun SerieDetailScreen(serieId: Int, viewModel: MainViewModel = viewModel()) {
                     )
                 }
 
-                // Affichage des acteurs
+                // Affichage des acteurs stylisé
                 item {
                     if (credits?.cast?.isNotEmpty() == true) {
                         Text(
@@ -102,12 +105,13 @@ fun SerieDetailScreen(serieId: Int, viewModel: MainViewModel = viewModel()) {
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
-                        credits.cast.forEach { actor ->
-                            Text(
-                                text = actor.name,
-                                style = MaterialTheme.typography.bodyMedium,
-                                modifier = Modifier.padding(bottom = 4.dp)
-                            )
+                        LazyRow(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        ) {
+                            items(credits.cast) { actor ->
+                                ActorCard(actor = actor)
+                            }
                         }
                     } else {
                         Text(
@@ -118,7 +122,7 @@ fun SerieDetailScreen(serieId: Int, viewModel: MainViewModel = viewModel()) {
                     }
                 }
 
-                // Affichage de l'équipe (réalisateurs, etc.)
+                // Affichage de l'équipe stylisée
                 item {
                     if (credits?.crew?.isNotEmpty() == true) {
                         Text(
@@ -126,12 +130,13 @@ fun SerieDetailScreen(serieId: Int, viewModel: MainViewModel = viewModel()) {
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
-                        credits.crew.forEach { member ->
-                            Text(
-                                text = "${member.name} - ${member.job}",
-                                style = MaterialTheme.typography.bodyMedium,
-                                modifier = Modifier.padding(bottom = 4.dp)
-                            )
+                        LazyRow(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        ) {
+                            items(credits.crew) { member ->
+                                CrewMemberCard(member = member)
+                            }
                         }
                     } else {
                         Text(
