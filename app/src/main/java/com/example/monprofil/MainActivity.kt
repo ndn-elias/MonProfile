@@ -3,6 +3,7 @@ package com.example.monprofil
 import MovieDetailScreen
 import SerieDetailScreen
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -151,7 +152,7 @@ class MainActivity : ComponentActivity() {
                                     selected = currentDestination?.hasRoute<DestinationPlaylist>() == true,
                                     onClick = { navController.navigate(DestinationPlaylist()) })
                             }
-                                                        }
+                        }
                     }
                 ) { innerPadding ->
                     NavHost(navController = navController, startDestination = DestinationProfile()) {
@@ -168,8 +169,11 @@ class MainActivity : ComponentActivity() {
                             ActeurScreen(viewModel = viewModel(), searchQuery = searchQuery.text, navController)
                         }
                         composable<DestinationPlaylist> {
-                            PlaylistScreen(viewModel = viewModel(), searchQuery = searchQuery.text, navController)
+
+                            PlaylistScreen(viewModel = viewModel(),  navController)
                         }
+
+
                         composable("movie/{movieId}") { backStackEntry ->
                             val movieId = backStackEntry.arguments?.getString("movieId")?.toIntOrNull()
                             movieId?.let { MovieDetailScreen(movieId = it) }

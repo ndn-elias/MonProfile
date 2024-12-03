@@ -1,15 +1,43 @@
+// personnes.kt
 package com.example.monprofil
 
-
+import android.util.Log
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-
+import coil.compose.AsyncImage
 
 @Composable
-fun PlaylistScreen(viewModel: MainViewModel = viewModel(), searchQuery: String, navController: NavController) {
-
-
+fun PlaylistScreen(viewModel: MainViewModel = viewModel(), navController: NavController) {
+    val screenPadding = 80.dp
+    AsyncImage(model = "file:///android_asset/images/2.jpg",
+        contentDescription = "",
+        modifier = Modifier
+            .padding(top = screenPadding)
+            .size(100.dp)
+            .clip(CircleShape),
+        alignment = Alignment.Center,
+        contentScale = ContentScale.Crop
+    )
 
 }
+
+
 
