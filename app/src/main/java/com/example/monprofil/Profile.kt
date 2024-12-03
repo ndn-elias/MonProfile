@@ -160,7 +160,7 @@ fun Reseaux() {
 @Composable
 fun Demarrer(navController: NavController) {
     Button(
-        onClick = { navController.navigate(DestinationFilm()) },
+        onClick = { navController.navigate(DestinationPlaylist()) },
         modifier = Modifier.padding(ButtonDefaults.IconSize)
     ) {
         Text(
