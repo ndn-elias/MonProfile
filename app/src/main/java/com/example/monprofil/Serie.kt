@@ -34,12 +34,13 @@ fun SerieScreen(viewModel: MainViewModel = viewModel(), searchQuery: String, nav
             viewModel.getSeries() // Charger les séries si la recherche est vide
         }
     }
-
+    val screenPadding = 80.dp
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(bottom = screenPadding) // Ajoute un padding en bas pour laisser de l'espace à la BottomBar
+            .padding(16.dp), // Padding autour de la grille
         contentPadding = PaddingValues(16.dp)
     ) {
         items(series) { serie ->
